@@ -1,0 +1,35 @@
+import math  
+  
+# 初始参数  
+B = 3100  # 信道带宽，单位Hz  
+C_initial = 35 * 1024  # 初始信息传输速率，单位bps（35kb/s转换为bps）  
+C_increase_ratio1 = 1.6  # 速率增加60%  
+C_increase_ratio2 = 1.2  # 速率再增加20%  
+  
+# 使用香农公式反推当前信噪比S/N  
+def calculate_SNR(C, B):  
+    return 2 ** (C / B) - 1  
+  
+# 当前信噪比S/N  
+SNR_initial = calculate_SNR(C_initial, B)  
+print(f"当前的信噪比S/N为：{SNR_initial:.2f}")  
+  
+# 计算速率增加60%后的信噪比S/N  
+C_new1 = C_initial * C_increase_ratio1  
+SNR_new1 = calculate_SNR(C_new1, B)  
+print(f"速率增加60%后，信噪比S/N应为：{SNR_new1:.2f}")  
+  
+# 计算新的信噪比S/N是原来的多少倍  
+SNR_ratio1 = SNR_new1 / SNR_initial  
+print(f"新的信噪比S/N是原来的{SNR_ratio1:.2f}倍")  
+  
+# 在新的信噪比S/N基础上再增加10倍，看速率是否能再增加20%  
+SNR_new2 = SNR_new1 * 10  
+C_check = B * math.log2(1 + SNR_new2)  
+C_increase_ratio_check = C_check / C_initial  
+print(f"在新的信噪比S/N基础上再增加10倍后，速率增加了{C_increase_ratio_check:.2f}倍")  
+  
+if C_increase_ratio_check >= C_increase_ratio1 * C_increase_ratio2:  
+    print(f"在新的信噪比S/N基础上再增加10倍后，速率能再增加20%")  
+else:  
+    print(f"在新的信噪比S/N基础上再增加10倍后，速率不能达到再增加20%的目标")
